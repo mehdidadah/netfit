@@ -1,0 +1,34 @@
+server:
+  port: ${SERVER_PORT:4001}
+
+info:
+  app:
+    version: "@project.version@"
+    name: "@project.artifactId@"
+
+spring:
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    consumer:
+      group-id: MDA
+      enable-auto-commit: false
+    listener:
+      ack-mode: record
+  application:
+    name: kafkalistener
+
+kafka:
+  consumer:
+    backoff: # defaults: 2s, 4s, 8s, 16s, 30s (+ fail durations, e.g. +2s for DB timeout)
+      initialIntervalMs: 2000
+      multiplier: 2
+      maxIntervalMs: 30000
+      maxElapsedTimeMs: 60000
+    topic:
+      account: test
+    schema:
+      EMP: classpath:/avro/avro.avsc
+
+logging:
+  mdc:
+    pattern: "[%X{topic}-%X{partition}-%X{offset}]"
